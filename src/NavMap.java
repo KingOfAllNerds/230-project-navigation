@@ -12,13 +12,13 @@ public class NavMap {
     private HashMap<String,double[]> locations = new HashMap<String,double[]>();
 
     public NavMap() {
-        String filePath = System.getProperty("user.dir") + File.separator + "NavigationSystem\\resources\\Locations.xlsx";
+        String filePath = System.getProperty("user.dir") + File.separator + "resources\\Locations.xlsx";
         readFile(filePath);
     }
 
     // must be in NavigationSystem folder to be found
     public NavMap(String fileName) {
-        String filePath = System.getProperty("user.dir") + File.separator + "NavigationSystem\\resources\\" + fileName;
+        String filePath = System.getProperty("user.dir") + File.separator + "resources\\" + fileName;
         readFile(filePath);
     }
 
