@@ -9,13 +9,14 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MapGraph {
-	private Hashtable<String, Location> places = new Hashtable<String, Location>();;
+	private Hashtable<String, Location> places = new Hashtable<String, Location>();
 	private static final int numConnections = 3;
 
 	public MapGraph() {
         String filePath = System.getProperty("user.dir") + File.separator + "resources\\Locations.xlsx";
         readFile(filePath);
 		setupConnections();
+		System.out.println(places.get("Virginia Beach, Va.").neighbors);
     }
 
     // must be in resources folder to be found
@@ -44,7 +45,7 @@ public class MapGraph {
                     else if(cell.getColumnIndex() == 1) coords[0] = cell.getNumericCellValue();
                     else if(cell.getColumnIndex() == 2) coords[1] = cell.getNumericCellValue();
                 }
-                places.put(locName,new Location(coords[0], coords[1]));
+                if(locName != null) places.put(locName,new Location(coords[0], coords[1]));
             }
             fis.close();
         }

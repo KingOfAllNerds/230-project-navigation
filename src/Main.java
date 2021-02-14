@@ -30,8 +30,6 @@ public class Main {
 	}
 
 	private static void StartScreen(JFrame frame) {
-		// TODO Auto-generated method stub
-		//l
 		frame.setSize(SIZE);
 		JPanel Start = new JPanel();
 		JLabel title = new JLabel("Navigation System");
