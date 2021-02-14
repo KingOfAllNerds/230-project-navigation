@@ -46,37 +46,8 @@ public class Main {
 		frame.add(title, BorderLayout.NORTH);
 		frame.add(center, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		NavMap Nav = new NavMap();
+		MapGraph mapGraph = new MapGraph();
 		frame.setVisible(true);	
-	}
-	
-	private double distanceCalculator(double[] Loc1, double[] Loc2) {
-		//distance using latitude and longitude
-		//Assumes latitude is stored in first slot in double[] ex Loc2 = [Latitude,Longitude]
-		double distLat = Math.toRadians(Loc2[0] - Loc1[0]);
-		double distLon = Math.toRadians(Loc2[1] - Loc1[1]);
-		
-		double lat1Radians = Math.toRadians(Loc1[0]);
-		double lat2Radians = Math.toRadians(Loc2[0]);
-		
-		double haversine = Math.pow(Math.sin(distLat / 2), 2) +
-						   Math.pow(Math.sin(distLon / 2), 2) *
-						   Math.cos(lat1Radians) *
-						   Math.cos(lat2Radians); //haversine formula used from coordinates
-		
-		double radius = 6371; //radius of earth
-		double distanceKM = 2 * Math.asin(Math.sqrt(haversine)) * radius; //second part of haversine formula
-		double distanceInMiles = distanceKM / 1.609344;
-		return distanceInMiles;
-	}
-	
-	private int timeCalculator(double distance) {
-		int averageSpeed = 0;
-		if(distance <= 99) averageSpeed = 40;
-		if(distance >= 51 && distance <= 99) averageSpeed = 50;
-		if(distance >= 100) averageSpeed = 60;
-		int estimatedTime = (int) (distance / averageSpeed);
-		return estimatedTime;
 	}
 
 }
