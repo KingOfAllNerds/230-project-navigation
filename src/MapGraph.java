@@ -60,7 +60,12 @@ public class MapGraph {
             System.out.println("error occured: "+e.toString());
         }
     }
-
+	
+	public Hashtable<String, Location> getPlaces() {
+		return places;
+	}
+	
+	
 	private void setupConnections() {
         if(places.size() < numConnections) {
             System.out.println("Add more locations or decrease the number of connections between places");
