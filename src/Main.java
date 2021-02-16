@@ -26,7 +26,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
-		StartScreen(frame);// TODO Auto-generated method stub
+		StartScreen(frame);
 	}
 
 	private static void StartScreen(JFrame frame) {
@@ -45,6 +45,8 @@ public class Main {
 		frame.add(center, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MapGraph mapGraph = new MapGraph();
+		mapGraph.findShortestPathFromPlace("Baker, Ore.", false);
+		System.out.println(mapGraph.getShortestPathTo("Austin, Tex."));
 		frame.setVisible(true);	
 	}
 

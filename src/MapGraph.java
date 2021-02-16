@@ -1,7 +1,12 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.PriorityQueue;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -10,13 +15,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MapGraph {
 	private Hashtable<String, Location> places = new Hashtable<String, Location>();
-	private static final int numConnections = 3;
+
+	// change this variable to have more/less connections
+	// default is 3
+	private static final int numConnections = 5;
 
 	public MapGraph() {
         String filePath = System.getProperty("user.dir") + File.separator + "resources\\Locations.xlsx";
         readFile(filePath);
 		setupConnections();
-		System.out.println(places.get("Virginia Beach, Va.").neighbors);
     }
 
     // must be in resources folder to be found
@@ -45,7 +52,7 @@ public class MapGraph {
                     else if(cell.getColumnIndex() == 1) coords[0] = cell.getNumericCellValue();
                     else if(cell.getColumnIndex() == 2) coords[1] = cell.getNumericCellValue();
                 }
-                if(locName != null) places.put(locName,new Location(coords[0], coords[1]));
+                if(locName != null) places.put(locName,new Location(coords[0], coords[1], locName));
             }
             fis.close();
         }
@@ -81,6 +88,7 @@ public class MapGraph {
                             minDistCosts[i] = distCost;
                             minTimeCosts[i] = timeCost;
                             minLocations[i] = locationName2;
+							break;
                         }
                     }
                 }
@@ -91,16 +99,64 @@ public class MapGraph {
         }
     }
 
-	private class Location {
+	public void findShortestPathFromPlace(String locName, boolean isTimeDist) {
+		Location source = places.get(locName);
+		PriorityQueue<Location> pq = new PriorityQueue<Location>();
+		source.distance = 0.0;
+		
+		pq.add(source);
+		source.visited = true;
+	
+		while(!pq.isEmpty()){
+			// Getting the minimum distance vertex from priority queue
+			Location loc = pq.poll();
+			for(Edge edge : loc.neighbors){
+				
+				Location neighbor = edge.otherLocation;
+				if(neighbor.visited == false) {
+					double newDistance = 0.0;
+					
+					if(isTimeDist) newDistance = loc.distance + edge.timeCost;
+					else newDistance = loc.distance + edge.distCost;
+					if(newDistance < neighbor.distance){
+						pq.remove(neighbor);
+						neighbor.distance = newDistance;
+						neighbor.predecessor = loc;
+						pq.add(neighbor);
+					}
+				}
+			}
+			loc.visited = true;
+		}
+	}
+
+	
+	public List<String> getShortestPathTo(String locName){
+		Location loc = places.get(locName);
+		List<String> path = new ArrayList<>();
+		
+		for(Location l=loc;l!=null;l=l.predecessor){
+			path.add(l.name);
+		}
+		Collections.reverse(path);
+		return path;
+	}
+
+	private class Location implements Comparable<Location>{
 		private ArrayList<Edge> neighbors;
 		private double[] coords;
-    
+		private String name;
+		private boolean visited;
+		private Location predecessor;
+		private double distance = Double.MAX_VALUE;
 
-		public Location(double lat, double lon) {
+		public Location(double lat, double lon, String name) {
 			neighbors = new ArrayList<Edge>();
 			coords = new double[2];
 			coords[0] = lat;
 			coords[1] = lon;
+			this.name = name;
+			visited = false;
 		}
 	
 		public void addEdge(String name, double dc, double tc) {
@@ -140,24 +196,23 @@ public class MapGraph {
 		public double[] getCoords() {
 			return coords;
 		}
+
+		@Override
+		public int compareTo(Location loc) {
+			return Double.compare(this.distance, loc.distance);
+		}
 	}
 	
 	private class Edge {
-		private Location otherNode;
+		private Location otherLocation;
 		private double distCost;
 		private double timeCost;
 		
 		public Edge(Location n, double dc, double tc){
-			otherNode = n;
+			otherLocation = n;
 			distCost = dc;
 			timeCost = tc;
 		}
-	}
-	
-
-	public boolean addNode(double lat, double lon, String name) {
-		places.put(name, new Location(lat,lon));
-		return true;
 	}
 	
 	public boolean addEdge(String name1, String name2, double dc, double tc) {
