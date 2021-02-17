@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MapGraph {
-	private Hashtable<String, Location> places = new Hashtable<String, Location>();
+	public static Hashtable<String, Location> places = new Hashtable<String, Location>();
 
 	// change this variable to have more/less connections
 	// default is 3
@@ -32,6 +32,7 @@ public class MapGraph {
         readFile(filePath);
 		setupConnections();
     }
+    
 
 	//Excel file needs three columns, 
     //the first column with the name in it, 
