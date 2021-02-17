@@ -170,6 +170,20 @@ public class MapGraph {
 			neighbors.add(new Edge(otherNode, dc, tc));
 		}
 		
+		public void helperDistance(int mileage) {
+			double current = 0;
+			double best = 10000000;
+			Edge next = null;
+			for(int i = 0; i < this.neighbors.size(); i++) {
+				current = this.neighbors.get(i).distCost;
+				if(current < best) {
+					best = current;
+					next = this.neighbors.get(i);
+				}
+			}
+			
+		}
+		
 		public double distanceCalculator(double[] Loc2) {
 			//distance using latitude and longitude
 			//Assumes latitude is stored in first slot in double[] ex Loc2 = [Latitude,Longitude]
