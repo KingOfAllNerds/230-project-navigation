@@ -32,11 +32,11 @@ public class Main {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		StartScreen(frame);
-		
+
 	}
 
 	private static void StartScreen(JFrame frame) {
-		
+
 		frame.setSize(SIZE);
 		JPanel Start = new JPanel();
 		JLabel title = new JLabel("Navigation System");
@@ -78,7 +78,7 @@ public class Main {
 				JTextField dist = new JTextField(5);
 				JTextField Time = new JTextField(5);
 				JPanel newP = new JPanel(new GridLayout(6, 4));
-				//frame.add(title);
+				// frame.add(title);
 				JPanel bigPanel = new JPanel();
 				newP.add(input1);
 				newP.add(startLocation);
@@ -89,25 +89,25 @@ public class Main {
 				newP.add(input4);
 				newP.add(Time);
 				newP.add(begin);
-			//	bigPanel.add(title, BorderLayout.NORTH);
+				// bigPanel.add(title, BorderLayout.NORTH);
 				bigPanel.add(newP, BorderLayout.SOUTH);
 				JPanel biggerPanel = new JPanel();
-				//biggerPanel.add(bigPanel);
-				frame.add(bigPanel, BorderLayout.NORTH);			
+				// biggerPanel.add(bigPanel);
+				frame.add(bigPanel, BorderLayout.NORTH);
 				begin.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						String start = startLocation.getText();
 						String end = endLocation.getText();
-						if(!Time.getText().isEmpty()) {
+						if (!Time.getText().isEmpty()) {
 							int time = Integer.parseInt(Time.getText());
 							System.out.println(time);
 						}
-						if(!dist.getText().isEmpty()) {
+						if (!dist.getText().isEmpty()) {
 							int distance = Integer.parseInt(dist.getText());
 							System.out.println(distance);
 						}
-						if(Time.getText().isEmpty() && dist.getText().isEmpty()) {
+						if (Time.getText().isEmpty() && dist.getText().isEmpty()) {
 							mapGraph.findShortestPathFromPlace(start, false);
 							List<String> Itinerary = mapGraph.getShortestPathTo(end);
 							String[] list = new String[Itinerary.size()];
@@ -127,17 +127,14 @@ public class Main {
 							frame.repaint();
 							Itinerary.clear();
 						}
-						if(!Time.getText().isEmpty()) {
-							
+						if (!Time.getText().isEmpty()) {
+
 						}
-						if(!dist.getText().isEmpty()) {
-							
+						if (!dist.getText().isEmpty()) {
+
 						}
 					}
 				});
-				
-				
-				
 
 				JButton printLocations = new JButton("Show Locations");
 				printLocations.addActionListener(new ActionListener() {
