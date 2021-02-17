@@ -68,18 +68,26 @@ public class Main {
 				JLabel title = new JLabel("Travel Planner");
 				JLabel input1 = new JLabel("Starting Location:");
 				JLabel input2 = new JLabel("Ending Location:");
+				JLabel input3 = new JLabel("Desired distance");
+				JLabel input4 = new JLabel("Desired Time");
 				JButton begin = new JButton("Begin Navigation");
 				title.setFont(new Font("serif", Font.PLAIN, 70));
 				mapGraph.getPlaces();
 				JTextField startLocation = new JTextField(5);
 				JTextField endLocation = new JTextField(5);
-				JPanel newP = new JPanel(new GridLayout(3, 2));
+				JTextField dist = new JTextField(5);
+				JTextField Time = new JTextField(5);
+				JPanel newP = new JPanel(new GridLayout(6, 4));
 				//frame.add(title);
 				JPanel bigPanel = new JPanel();
 				newP.add(input1);
 				newP.add(startLocation);
 				newP.add(input2);
 				newP.add(endLocation);
+				newP.add(input3);
+				newP.add(dist);
+				newP.add(input4);
+				newP.add(Time);
 				newP.add(begin);
 			//	bigPanel.add(title, BorderLayout.NORTH);
 				bigPanel.add(newP, BorderLayout.SOUTH);
@@ -91,27 +99,40 @@ public class Main {
 					public void actionPerformed(ActionEvent arg0) {
 						String start = startLocation.getText();
 						String end = endLocation.getText();
-						mapGraph.findShortestPathFromPlace(start, false);
-						System.out.println(mapGraph.getShortestPathTo(end));
-						List<String> Itinerary = mapGraph.getShortestPathTo(end);
-						String[] list = new String[Itinerary.size()];
-						String output = "Starting at: ";
-						for (int i = 0; i < Itinerary.size(); i++) {
-							output = output + Itinerary.get(i);
-							list[i] = Itinerary.get(i);
-							if (i < Itinerary.size() - 1) {
-								output = output + " Next stop: ";
-							}
+						if(!Time.getText().isEmpty()) {
+							int time = Integer.parseInt(Time.getText());
+							System.out.println(time);
 						}
-						System.out.println(output);
-						JList<String> frameList = new JList<String>(list);
-						frameList.setVisible(true);
-						biggerPanel.add(frameList, BorderLayout.CENTER);
-						frame.add(biggerPanel, BorderLayout.CENTER);
-						frame.setVisible(true);
-						frame.repaint();
-						Itinerary.clear();
-					
+						if(!dist.getText().isEmpty()) {
+							int distance = Integer.parseInt(dist.getText());
+							System.out.println(distance);
+						}
+						if(Time.getText().isEmpty() && dist.getText().isEmpty()) {
+							mapGraph.findShortestPathFromPlace(start, false);
+							List<String> Itinerary = mapGraph.getShortestPathTo(end);
+							String[] list = new String[Itinerary.size()];
+							String output = "Starting at: ";
+							for (int i = 0; i < Itinerary.size(); i++) {
+								output = output + Itinerary.get(i);
+								list[i] = Itinerary.get(i);
+								if (i < Itinerary.size() - 1) {
+									output = output + " Next stop: ";
+								}
+							}
+							JList<String> frameList = new JList<String>(list);
+							frameList.setVisible(true);
+							biggerPanel.add(frameList, BorderLayout.CENTER);
+							frame.add(biggerPanel, BorderLayout.CENTER);
+							frame.setVisible(true);
+							frame.repaint();
+							Itinerary.clear();
+						}
+						if(!Time.getText().isEmpty()) {
+							
+						}
+						if(!dist.getText().isEmpty()) {
+							
+						}
 					}
 				});
 				
