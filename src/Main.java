@@ -45,8 +45,6 @@ public class Main {
 		ImageIcon map = new ImageIcon("src/USA2.png");
 		JLabel center = new JLabel(map);
 		JButton TravelGuide = new JButton("Travel Manager");
-		JButton About = new JButton("About");
-		Start.add(About);
 		Start.add(TravelGuide);
 		frame.add(Start, BorderLayout.SOUTH);
 		frame.add(title, BorderLayout.NORTH);
