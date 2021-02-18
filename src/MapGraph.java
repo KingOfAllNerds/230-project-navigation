@@ -150,7 +150,7 @@ public class MapGraph {
 		return path;
 	}
 
-	private class Location implements Comparable<Location> {
+	public class Location implements Comparable<Location> {
 		private ArrayList<Edge> neighbors;
 		private double[] coords;
 		private String name;
@@ -172,18 +172,44 @@ public class MapGraph {
 			neighbors.add(new Edge(otherNode, dc, tc));
 		}
 
-		public void helperDistance(int mileage) {
+		public List<String> helperDistance(List<String> returner, double mileage) {
 			double current = 0;
 			double best = 10000000;
-			Edge next = null;
+			Location next = null;
 			for (int i = 0; i < this.neighbors.size(); i++) {
 				current = this.neighbors.get(i).distCost;
-				if (current < best) {
+				if (current < best && !returner.contains(this.neighbors.get(i).otherLocation.name)) {
 					best = current;
-					next = this.neighbors.get(i);
+					next = this.neighbors.get(i).otherLocation;
 				}
 			}
-
+			if(mileage - best > 0) {
+				returner.add(next.name);
+				return next.helperDistance(returner, mileage - best);
+			}
+			else {
+				return returner;
+			}
+		}
+		
+		public List<String> helperTime(List<String> returner, double time){
+			returner.add(this.name);
+			double current = 0;
+			double best = 10000000;
+			Location next = null;
+			for (int i = 0; i < this.neighbors.size(); i++) {
+				current = this.neighbors.get(i).timeCost;
+				if (current < best && !returner.contains(this.neighbors.get(i).otherLocation.name)) {
+					best = current;
+					next = this.neighbors.get(i).otherLocation;
+				}
+			}
+			if(time - best > 0) {
+				return next.helperTime(returner, time - best);
+			}
+			else {
+				return returner;
+			}
 		}
 
 		public double distanceCalculator(double[] Loc2) {

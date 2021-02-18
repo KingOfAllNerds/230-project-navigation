@@ -99,40 +99,39 @@ public class Main {
 					public void actionPerformed(ActionEvent arg0) {
 						String start = startLocation.getText();
 						String end = endLocation.getText();
+						List<String> Itinerary = null;
 						if (!Time.getText().isEmpty()) {
 							int time = Integer.parseInt(Time.getText());
-							System.out.println(time);
+							mapGraph.findShortestPathFromPlace(start, true);
+							List<String> into = new ArrayList<String>();
+							Itinerary = mapGraph.places.get(start).helperTime(into, time);
 						}
 						if (!dist.getText().isEmpty()) {
 							int distance = Integer.parseInt(dist.getText());
-							System.out.println(distance);
+							mapGraph.findShortestPathFromPlace(start, false);
+							List<String> into = new ArrayList<String>();
+							Itinerary = mapGraph.places.get(start).helperDistance(into, distance);
 						}
 						if (Time.getText().isEmpty() && dist.getText().isEmpty()) {
 							mapGraph.findShortestPathFromPlace(start, false);
-							List<String> Itinerary = mapGraph.getShortestPathTo(end);
-							String[] list = new String[Itinerary.size()];
-							String output = "Starting at: ";
-							for (int i = 0; i < Itinerary.size(); i++) {
-								output = output + Itinerary.get(i);
-								list[i] = Itinerary.get(i);
-								if (i < Itinerary.size() - 1) {
-									output = output + " Next stop: ";
-								}
+							Itinerary = mapGraph.getShortestPathTo(end);
+						}
+						String[] list = new String[Itinerary.size()];
+						String output = "Starting at: ";
+						for (int i = 0; i < Itinerary.size(); i++) {
+							output = output + Itinerary.get(i);
+							list[i] = Itinerary.get(i);
+							if (i < Itinerary.size() - 1) {
+								output = output + " Next stop: ";
 							}
-							JList<String> frameList = new JList<String>(list);
-							frameList.setVisible(true);
-							biggerPanel.add(frameList, BorderLayout.CENTER);
-							frame.add(biggerPanel, BorderLayout.CENTER);
-							frame.setVisible(true);
-							frame.repaint();
-							Itinerary.clear();
 						}
-						if (!Time.getText().isEmpty()) {
-
-						}
-						if (!dist.getText().isEmpty()) {
-
-						}
+						JList<String> frameList = new JList<String>(list);
+						frameList.setVisible(true);
+						biggerPanel.add(frameList, BorderLayout.CENTER);
+						frame.add(biggerPanel, BorderLayout.CENTER);
+						frame.setVisible(true);
+						frame.repaint();
+						Itinerary.clear();
 					}
 				});
 
