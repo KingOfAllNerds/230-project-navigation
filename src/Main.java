@@ -1,19 +1,12 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.rmi.server.SocketSecurityException;
-import java.util.ArrayList;
+
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 
 public class Main {
 
@@ -145,8 +137,7 @@ public class Main {
 				frame.repaint();
 
 			}
-			
-			
+
 			private void editNewFrame(JFrame frame, JTextField startLocation, JTextField endLocation, JTextField dist,
 					JTextField Time, JButton begin) {
 				frame.setSize(SIZE);
