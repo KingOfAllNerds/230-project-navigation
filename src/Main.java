@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -41,15 +42,20 @@ public class Main {
 		frame.setSize(SIZE);
 		JPanel Start = new JPanel();
 		JLabel title = new JLabel("Navigation System");
+
 		title.setFont(new Font("serif", Font.PLAIN, 70));
+
 		ImageIcon map = new ImageIcon("src/USA2.png");
 		JLabel center = new JLabel(map);
+
 		JButton TravelGuide = new JButton("Travel Manager");
 		Start.add(TravelGuide);
+
 		frame.add(Start, BorderLayout.SOUTH);
 		frame.add(title, BorderLayout.NORTH);
 		frame.add(center, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		MapGraph mapGraph = new MapGraph();
 		// mapGraph.findShortestPathFromPlace("Baker, Ore.", false);
 		// System.out.println(mapGraph.getShortestPathTo("Austin, Tex."));
@@ -68,31 +74,41 @@ public class Main {
 				JTextField dist = new JTextField(5);
 				JTextField Time = new JTextField(5);
 				JButton begin = new JButton("Begin Navigation");
+
+				JPanel biggerPanel = new JPanel();
+				JList<String> frameList = new JList<String>();
+
+				biggerPanel.add(frameList, BorderLayout.CENTER);
+				frame.add(biggerPanel, BorderLayout.CENTER);
+
 				editNewFrame(frame, startLocation, endLocation, dist, Time, begin);
+
 				begin.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						frameList.removeAll();
+
 						String start = startLocation.getText();
 						String end = endLocation.getText();
+
 						List<String> Itinerary = null;
+
 						if (!Time.getText().isEmpty()) {
-							int time = Integer.parseInt(Time.getText());
-							mapGraph.findShortestPathFromPlace(start, true);
-							List<String> into = new ArrayList<String>();
-							Itinerary = mapGraph.places.get(start).helperTime(into, time);
-						}
-						if (!dist.getText().isEmpty()) {
-							int distance = Integer.parseInt(dist.getText());
-							mapGraph.findShortestPathFromPlace(start, false);
-							List<String> into = new ArrayList<String>();
-							Itinerary = mapGraph.places.get(start).helperDistance(into, distance);
-						}
-						if (Time.getText().isEmpty() && dist.getText().isEmpty()) {
-							mapGraph.findShortestPathFromPlace(start, false);
+							mapGraph.findShortestPathFromLocation(start, true);
 							Itinerary = mapGraph.getShortestPathTo(end);
 						}
+						if (!dist.getText().isEmpty()) {
+							mapGraph.findShortestPathFromLocation(start, false);
+							Itinerary = mapGraph.getShortestPathTo(end);
+						}
+						if (Time.getText().isEmpty() && dist.getText().isEmpty()) {
+							mapGraph.findShortestPathFromLocation(start, false);
+							Itinerary = mapGraph.getShortestPathTo(end);
+						}
+
 						String[] list = new String[Itinerary.size()];
 						String output = "Starting at: ";
+
 						for (int i = 0; i < Itinerary.size(); i++) {
 							output = output + Itinerary.get(i);
 							list[i] = Itinerary.get(i);
@@ -100,13 +116,15 @@ public class Main {
 								output = output + " Next stop: ";
 							}
 						}
-						JList<String> frameList = new JList<String>(list);
+
+						frameList.setListData(list);
+
 						frameList.setVisible(true);
-						JPanel biggerPanel = new JPanel();
-						biggerPanel.add(frameList, BorderLayout.CENTER);
-						frame.add(biggerPanel, BorderLayout.CENTER);
 						frame.setVisible(true);
+
 						frame.repaint();
+						frame.revalidate();
+
 						Itinerary.clear();
 					}
 				});

@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -64,10 +62,6 @@ public class MapGraph {
 		}
 	}
 
-	public Hashtable<String, Location> getPlaces() {
-		return places;
-	}
-
 	private void setupConnections() {
 		if (places.size() < numConnections) {
 			System.out.println("Add more locations or decrease the number of connections between places");
@@ -106,16 +100,23 @@ public class MapGraph {
 		}
 	}
 
-	public void findShortestPathFromPlace(String locName, boolean isTimeDist) {
+	public void findShortestPathFromLocation(String locName, boolean isTimeDist) {
 		Location source = places.get(locName);
 		PriorityQueue<Location> pq = new PriorityQueue<Location>();
+		
+		for(String locationName : places.keySet()) {
+			Location loc = places.get(locationName);
+			loc.distance = Double.MAX_VALUE;
+			loc.visited = false;
+			loc.predecessor = null;
+		}
+
 		source.distance = 0.0;
 
 		pq.add(source);
 		source.visited = true;
 
 		while (!pq.isEmpty()) {
-			// Getting the minimum distance vertex from priority queue
 			Location loc = pq.poll();
 			for (Edge edge : loc.neighbors) {
 
@@ -172,45 +173,6 @@ public class MapGraph {
 			neighbors.add(new Edge(otherNode, dc, tc));
 		}
 
-		public List<String> helperDistance(List<String> returner, double mileage) {
-			double current = 0;
-			double best = 10000000;
-			Location next = null;
-			for (int i = 0; i < this.neighbors.size(); i++) {
-				current = this.neighbors.get(i).distCost;
-				if (current < best && !returner.contains(this.neighbors.get(i).otherLocation.name)) {
-					best = current;
-					next = this.neighbors.get(i).otherLocation;
-				}
-			}
-			if(mileage - best > 0) {
-				returner.add(next.name);
-				return next.helperDistance(returner, mileage - best);
-			}
-			else {
-				return returner;
-			}
-		}
-		
-		public List<String> helperTime(List<String> returner, double time){
-			returner.add(this.name);
-			double current = 0;
-			double best = 10000000;
-			Location next = null;
-			for (int i = 0; i < this.neighbors.size(); i++) {
-				current = this.neighbors.get(i).timeCost;
-				if (current < best && !returner.contains(this.neighbors.get(i).otherLocation.name)) {
-					best = current;
-					next = this.neighbors.get(i).otherLocation;
-				}
-			}
-			if(time - best > 0) {
-				return next.helperTime(returner, time - best);
-			}
-			else {
-				return returner;
-			}
-		}
 
 		public double distanceCalculator(double[] Loc2) {
 			// distance using latitude and longitude
